@@ -1,0 +1,155 @@
+﻿CREATE DATABASE FADB
+
+CREATE TABLE clubOwner
+(userName nvarchar(25),
+password nvarchar(45) not null,
+firstName nvarchar(25),
+lastName nvarchar(25),
+email nvarchar(50) unique not null,
+officeHours nvarchar(100),
+startDate date,
+phone decimal(10) check(phone>999999999 AND phone<2000000000),
+primary key (userName)
+);
+
+CREATE TABLE Club
+(id int IDENTITY(1,1),
+name nvarchar(25),
+street nvarchar(50),
+city nvarchar(15),
+rating float check(rating <= 5 and rating >= 0),
+reviewCount int,
+clubOwner nvarchar(25),
+primary key(id),
+foreign key (clubOwner) references clubOwner
+on delete set null on update cascade
+);
+CREATE TABLE Pitch
+(
+clubId int ,
+pitch# int ,
+creationDate date default(getdate()),
+capacity int check(capacity in(5,7,11)),
+price float check(price>0),
+type int check(type in(0,1,2)),
+primary key (clubId, pitch#),
+foreign key(clubId) references Club
+on update cascade on delete cascade
+);
+CREATE TABLE Academy 
+(
+name nvarchar(50),
+monthlySubscription float check(monthlySubscription >0),
+clubId int,
+primary key (clubId, name),
+foreign key (clubId) references Club
+on delete cascade on update cascade
+
+);
+
+
+
+CREATE TABLE Player
+(userName nvarchar(25),
+password nvarchar(45) not null,
+firstName nvarchar(25),
+lastName nvarchar(25),
+email nvarchar(50) unique not null,
+birthdate date check(birthdate<getdate()),
+visa# decimal(16),
+academyName nvarchar(50),
+clubId int,
+phone decimal(10) check(phone>999999999 AND phone<2000000000),
+primary key (userName),
+foreign key (clubId, academyName) references academy(clubId,name)
+on delete set null on update set null
+);
+
+
+
+CREATE TABLE Review
+(
+playerId nvarchar(25),
+clubId int,
+rating int check(rating<=5 and rating>=1),
+text nvarchar(150),
+dateTime datetime default(getdate()),
+primary key (playerId, clubId),
+foreign key(playerId) references Player
+on delete cascade on update no action,
+foreign key(clubId) references Club
+on delete cascade on update cascade
+);
+
+create table Event
+(
+,clubId int ,
+name nvarchar(150),
+startTime datetime,
+endTime datetime,
+noOfTeams int check (noOfTeams>0),
+noOfTeamMembers int check(noOfTeamMembers>0),
+availablePlaces int check(availablePlaces>=0),
+prize int check(prize>=0),
+pricePerTeam int check(pricePerTeam>0),
+primary key (eventId,clubId),
+foreign key (clubId) references club
+on delete cascade on update cascade
+);
+
+
+create table Schedule
+(
+startTime datetime ,
+endTime datetime,
+paid float check(paid>0),
+unpaid float check(unpaid>0),
+duration int check(duration>0),
+clubId int,
+pitch# int,
+playerUserName nvarchar(25),
+primary key (startTime,endTime,clubId,pitch#,playerUserName),
+foreign key (clubId,pitch#) references pitch(clubId,pitch#)
+on delete cascade on update cascade,
+foreign key (playerUserName) references Player
+on delete cascade on update no action
+);
+
+
+create table Profit
+(
+clubId int,
+profitDate date,
+outcome float check(outcome>0),
+income float check(income>0),
+profitVal float, 
+primary key (clubId,profitDate),
+foreign key (clubId) references club
+on delete cascade on update cascade
+);
+
+create table Maintanance
+(
+clubId int ,
+pitch# int,
+startTime datetime,
+endTime datetime,
+cost float check(cost>0),
+description varchar(50),
+primary key (clubId,pitch#,startTime,endTime),
+foreign key (clubId,pitch#) references Pitch(clubId,pitch#)
+on delete cascade on update cascade 
+);
+
+
+create table Participate 
+(
+playerUserName nvarchar(25),
+eventId int check (eventId>0),
+clubId int,
+primary key (playerUserName,eventId,clubId),
+foreign key (eventId,clubId) references Event (eventId,clubId)
+on delete cascade on update cascade,
+foreign key (playerUserName) references Player (userName)
+on delete cascade on update no action
+)
