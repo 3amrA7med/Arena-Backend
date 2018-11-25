@@ -10,7 +10,7 @@ namespace Arena
     public class DBManager
     {
 
-        static string DB_Connection_String = @"Data Source=localhost;Initial Catalog=SPJ_DB_Lab4;Integrated Security=True";
+        static string DB_Connection_String = @"Data Source=JIMMY-LAPTOP;Initial Catalog=FADB;Integrated Security=True";
 
         SqlConnection myConnection;
 
