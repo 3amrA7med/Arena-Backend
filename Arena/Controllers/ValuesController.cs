@@ -10,27 +10,37 @@ namespace Arena.Controllers
    
     public class ValuesController : ApiController
     {
-        DBManager dbMan = new DBManager();
         // GET api/values
+        ValuesController()
+        {
+
+        }
         public IEnumerable<string> Get()
         {
+
             return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
+
         public string Get(int id)
         {
+            System.Diagnostics.Debug.WriteLine("ffffffffffffffffffff");
+
             return "value";
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public int Post(Type type)
         {
+            System.Diagnostics.Debug.WriteLine("ffffffffffffffffffff");
+            return 5;
         }
 
         // PUT api/values/5
         public void Put(int id, [FromBody]string value)
         {
+
         }
 
         // DELETE api/values/5
