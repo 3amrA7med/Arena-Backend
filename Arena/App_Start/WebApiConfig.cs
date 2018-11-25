@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Net.Http.Headers;
 
 namespace Arena
 {
@@ -13,7 +14,8 @@ namespace Arena
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
+            //defining a new type to be able to reed from ionic ajax calls 
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
