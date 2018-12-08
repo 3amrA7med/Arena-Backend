@@ -18,6 +18,25 @@ namespace Arena.Controllers
             handler = new DBHandler();
         }
         //----------------------------------------GET FUNCTIONS---------------------------------
+
+/* 
+ * notes to my friends (JIMJIM,SHEDO,DODA)
+ * // Type-specific constraints
+{ "bool", typeof(BoolRouteConstraint)
+    },
+{ "datetime", typeof(DateTimeRouteConstraint)
+},
+{ "decimal", typeof(DecimalRouteConstraint) },
+{ "double", typeof(DoubleRouteConstraint) },
+{ "float", typeof(FloatRouteConstraint) },
+{ "guid", typeof(GuidRouteConstraint) },
+{ "int", typeof(IntRouteConstraint) },
+{ "long", typeof(LongRouteConstraint) },
+string is the defult value   
+    */
+
+
+
         // GET: api/DB
         public IEnumerable<string> Get()
         {
@@ -28,6 +47,34 @@ namespace Arena.Controllers
         public string Get(int id)
         {
             return "value";
+        }
+
+
+        [Route("api/DB/GetEvents/{username}/{date:datetime}")]
+        [HttpGet]
+        public DataTable GetEvents(string username,DateTime date)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GETEVENTS********************************** ");
+            DataTable result =handler.GetEvents(date,username);
+            return result;
+        }
+
+        [Route("api/DB/GetReservations/{username}/{date:datetime}")]
+        [HttpGet]
+        public DataTable GetReservations(string username,DateTime date)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GETReser********************************** ");
+            DataTable result = handler.GetReservations(date, username);
+            return result;
+        }
+
+        [Route("api/DB/GetMaint/{username}/{date:datetime}")]
+        [HttpGet]
+        public DataTable GetMaint(string username, DateTime date)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GETmaint********************************** ");
+            DataTable result = handler.GetMaint(date, username);
+            return result;
         }
         //--------------------------------------------------------------------------
         //---------------------------------------POST FUNCTIONS--------------------
