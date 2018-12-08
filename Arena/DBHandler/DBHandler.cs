@@ -59,5 +59,32 @@ namespace Arena
             else return null;
 
         }
+
+        public DataTable GetEvents(DateTime date,string username)
+        {
+
+            string query = "SELECT *  FROM EVENT  JOIN CLUB ON EVENT.clubId=CLUB.id "
+                +"WHERE EVENT.startTime='"+ date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='"+username+"'";
+            return dbMan.ExecuteReader(query);
+        }
+
+
+        public DataTable GetReservations(DateTime date, string username)
+        {
+
+            string query = "SELECT *  FROM Schedule  JOIN CLUB ON Schedule.clubId=CLUB.id "
+                + "WHERE Schedule.startTime='" + date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='" + username + "'";
+            return dbMan.ExecuteReader(query);
+        }
+
+        public DataTable GetMaint(DateTime date, string username)
+        {
+
+            string query = "SELECT *  FROM Maintanance  JOIN CLUB ON Maintanance.clubId=CLUB.id "
+                + "WHERE Maintanance.startTime='" + date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='" + username + "'";
+            return dbMan.ExecuteReader(query);
+        }
+
+        //===========================================================================
     }
 }
