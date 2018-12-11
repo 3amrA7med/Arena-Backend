@@ -57,6 +57,85 @@ namespace Arena.Controllers
             DataTable result = handler.clubOwner_signup(c);
             return result;
         }
+
+        [Route("api/DB/PostOwnerMaintanance")]
+        [HttpPost]
+        public DataTable PostOwnerMaintanance([FromBody]ClubOwner_maintanance m)
+        {
+            
+            System.Diagnostics.Debug.WriteLine("Inside maintanance_Post********************************** ");
+            DataTable result = handler.clubOwner_maintanance(m);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerPitch")]
+        [HttpPost]
+        public DataTable PostOwnerPitch([FromBody]ClubOwner_pitch p)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside pitch_Post********************************** ");
+            DataTable result = handler.clubOwner_pitch(p);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerEvent")]
+        [HttpPost]
+        public DataTable PostOwnerEvent([FromBody]ClubOwner_event e)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_event(e);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerUpdateAcademy")]
+        [HttpPost]
+        public DataTable PostOwnerUpdateAcademy([FromBody]ClubOwner_academy a)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_academy(a);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerViewAcadamy")]
+        [HttpPost]
+        public DataTable PostOwnerViewAcadamy([FromBody]ClubOwner_clubid c)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_viewacademy(c);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerAddAcadamy")]
+        [HttpPost]
+        public DataTable PostOwnerAddAcadamy([FromBody]ClubOwner_addacademy c)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_addacademy(c);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerPitchNumber")]
+        [HttpPost]
+        public DataTable PostOwnerPitchNumber([FromBody]ClubOwner_clubid c)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_pitchno(c);
+            return result;
+        }
+
+        [Route("api/DB/PostOwnerClubId")]
+        [HttpPost]
+        public DataTable PostOwnerClubId ([FromBody]ClubOwner_username u)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
+            DataTable result = handler.clubOwner_getid(u);
+            return result;
+        }
         //--------------------------------------------------------------------------
         //---------------------------------------PUT FUNCTIONS----------------------
         // PUT: api/DB/5
