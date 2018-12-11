@@ -187,5 +187,31 @@ namespace Arena
         }
 
         //===========================================================================
+        public DataTable UpdatePlayer(Player p)
+        {
+            string query = "update Player set firstName = '" + p.fname + "' , lastName = '" + p.lname + "' , phone = '" + p.phone + "' , email = '" + p.email + "' , visa# = " + p.visa + " , password = '" + p.password + "' , birthDate = '" + p.bdate.ToString("yyyy-MM-dd") + "' where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND password='" + p.password + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+        }
+        public DataTable GetMyAcademy(string username)
+        {
+            string query = "select C.name as club_name,C.city,C.street,P.academyName,A.monthlySubscription from Player P, Club C, Academy A where userName = '" + username + "' and P.clubId=C.id and P.academyName=A.name";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable Unsubscribe (Player p)
+        {
+            string query = "update Player set academyName ='NULL' , clubId='NULL' where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND password='" + p.password + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+
+        }
     }
 }
