@@ -76,6 +76,16 @@ string is the defult value
             DataTable result = handler.GetMaint(date, username);
             return result;
         }
+
+        [Route("api/DB/GetMyAcademy/{username}")]
+        [HttpGet]
+        public DataTable GetMyAcademy(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetMyAcademy(username);
+            return result;
+        }
+
         //--------------------------------------------------------------------------
         //---------------------------------------POST FUNCTIONS--------------------
         // POST: api/DB
@@ -107,8 +117,22 @@ string is the defult value
         //--------------------------------------------------------------------------
         //---------------------------------------PUT FUNCTIONS----------------------
         // PUT: api/DB/5
-        public void Put(int id, [FromBody]string value)
+        [Route("api/DB/UpdatePlayer")]
+        [HttpPost]
+        public DataTable Put([FromBody]Player p)
         {
+            System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
+            DataTable result = handler.UpdatePlayer(p);
+            return result;
+        }
+
+        [Route("api/DB/UnsubscribeAcademy")]
+        [HttpPost]
+        public DataTable Unsubscribe([FromBody]Player p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
+            DataTable result = handler.Unsubscribe(p);
+            return result;
         }
         //--------------------------------------------------------------------------
         //---------------------------------------DELETE FUNCTIONS-------------------
