@@ -190,7 +190,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ClubOwner_academy.cs" />
+    <Compile Include="Models\ClubOwner_addacademy.cs" />
+    <Compile Include="Models\ClubOwner_clubid.cs" />
+    <Compile Include="Models\ClubOwner_event.cs" />
+    <Compile Include="Models\ClubOwner_maintanance.cs" />
+    <Compile Include="Models\ClubOwner_pitch.cs" />
     <Compile Include="Models\ClubOwner_signup.cs" />
+    <Compile Include="Models\ClubOwner_username.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Signin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -326,4 +333,11 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+	<Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+		<ItemGroup>
+			<RoslynFiles Include="$(CscToolPath)\*" />
+		</ItemGroup>
+		<MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+		<Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+	</Target>
 </Project>
