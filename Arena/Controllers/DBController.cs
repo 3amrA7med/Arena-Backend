@@ -65,15 +65,8 @@ string is the defult value
             DataTable result = handler.getCitiesBooking();
             return result;
         }
-        //"api/DB/Book/insertBooking/b/3/1/2018-12-12/12:00/100/100/"
-        [Route("api/DB/Book/insertBooking/{user}/{selclub:int}/{selpitchno:int}/{date}/{date2}/{paid:int}/{unpaid:int}")]
-        [HttpGet]
-        public DataTable insertBooking(string user,int  selclub,int selpitchno,string date,string date2, int paid,int unpaid)
-        {
-            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
-            DataTable result = handler.insertBookingDB(user, selclub, selpitchno, date + " " + date2 + ":00", paid, unpaid);
-            return result;
-        }
+        
+
         [Route("api/DB/Book/getClubs/{city}")]
         [HttpGet]
         public DataTable getClubs(string city)
@@ -267,6 +260,14 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
             DataTable result = handler.clubOwner_getid(u);
+            return result;
+        }
+        [Route("api/DB/Book/insertBooking")]
+        [HttpPost]
+        public DataTable insertBooking([FromBody]PlayerBooking p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.insertBookingDB(p);
             return result;
         }
         //--------------------------------------------------------------------------

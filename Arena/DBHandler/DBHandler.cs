@@ -49,11 +49,11 @@ namespace Arena
             string query = "select distinct city from club";
             return dbMan.ExecuteReader(query);
         }
-        public DataTable insertBookingDB(string user, int selclub, int selpitchno, string date, int paid,int unpaid)
+        public DataTable insertBookingDB(PlayerBooking p)
         {
-            string query = "INSERT INTO schedule VALUES ('" + date+"', '"+paid+"', '"+unpaid+ "', '"+selclub+ "', '"+selpitchno+ "','"+user+"');";
+            string query = "INSERT INTO schedule VALUES ('" + p.date+" "+ p.date2 +":00', '"+p.paid+"', '"+p.unpaid+ "', '"+p.selclub+ "', '"+p.selpitchno+ "','"+p.user+"');";
             if (dbMan.ExecuteNonQuery(query) == 1)
-                return dbMan.ExecuteReader("SELECT * FROM SCHEDULE WHERE startTime = '" + date + "' AND clubId = '" + selclub + "' AND pitch# = '" + selpitchno + "';");
+                return dbMan.ExecuteReader("SELECT * FROM SCHEDULE WHERE startTime = '" + p.date + " " + p.date2 + ":00' AND clubId = '" + p.selclub + "' AND pitch# = '" + p.selpitchno + "';");
             else return null;
   
         }
