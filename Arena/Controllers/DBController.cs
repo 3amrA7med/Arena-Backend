@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Arena.Models;
 using System.Data;
-
 namespace Arena.Controllers
 {
     public class DBController : ApiController
@@ -297,6 +296,26 @@ string is the defult value
         {
         }
 
+        [Route("api/DB/DeleteEvent/{id:int}/{username}")]
+        [HttpDelete]
+        public int DeleteEvent(int id, string username)
+        {
+            return handler.DeleteEvent(id, username);
+        }
+
+        [Route("api/DB/DeleteReservation/{num:int}/{username}/{date:datetime}/{time}")]
+        [HttpDelete]
+        public int DeleteReservation(int num, string username, DateTime date, String time)
+        {
+           return handler.DeleteReservation(date,num, username, time);
+        }
+
+        [Route("api/DB/DeleteMaint/{num:int}/{username}/{date:datetime}/{time}/{minutes}")]
+        [HttpDelete]
+        public int DeleteMaint(int num, string username, DateTime date, String time,String minutes)
+        {
+           return handler.DeleteMaint(date, num, username, time,minutes);
+        }
 
     }
 }
