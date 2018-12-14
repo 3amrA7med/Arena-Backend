@@ -90,6 +90,107 @@ namespace Arena
 
         }
 
+        public DataTable clubOwner_maintanance(ClubOwner_maintanance c)
+        {
+            string query = "INSERT INTO Maintanance (clubid,pitch#,startTime,endTime,cost,description) " +
+                " VALUES (" + c.clubid + "," + c.pitch_no + ",'" + c.maintanance_start_date.ToString("yyyy-MM-dd hh:mm:00.000")
+                + "','" + c.maintanance_end_date.ToString("yyyy-MM-dd hh:mm:00.000") + "'," + c.cost + ",'" + c.description + "')";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+               
+                    query = "SELECT * FROM Maintanance WHERE clubId=" + c.clubid + " AND Pitch#=" + c.pitch_no + ";";
+                    return dbMan.ExecuteReader(query);
+              
+            }
+            else return null;
+
+        }
+
+        public DataTable clubOwner_event(ClubOwner_event c)
+        {
+            string query = "Insert into Event (clubId,name,startTime,endTime,noOfTeams,noOfTeamMembers,availablePlaces,prize,pricePerTeam) " +
+                " VALUES (" + c.clubid + ",'" + c.name + "','" + c.event_start_time.ToString("yyyy-MM-dd hh:mm:00.000")
+                + "','" + c.event_end_time.ToString("yyyy-MM-dd hh:mm:00.000") + "'," + c.noofteams + "," + c.noofteammembers 
+                + ","+c.availableplaces + ","+c.prize + ","+ c.priceperteam + ")";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+
+                query = "SELECT * FROM Event WHERE clubId=" + c.clubid + " AND startTime='" 
+                    + c.event_start_time.ToString("yyyy-MM-dd hh:mm:00.000") + "' AND endTime='" 
+                    + c.event_end_time.ToString("yyyy-MM-dd hh:mm:00.000") + "';";
+                return dbMan.ExecuteReader(query);
+
+            }
+            else return null;
+
+        }
+
+        public DataTable clubOwner_pitch(ClubOwner_pitch c)
+        {
+            string query = "Insert into Pitch (clubId,pitch#,creationDate,capacity,price,type) " +
+                " VALUES (" + c.clubid + "," + c.pitch_no + ",'" + c.creation_date.ToString("yyyy-MM-dd ")
+                + "'," + c.capacity + "," + c.price + "," + c.type+ ")";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+
+                query = "SELECT * FROM Pitch WHERE clubId=" + c.clubid + " AND pitch# ="
+                    + c.pitch_no + ";";
+                return dbMan.ExecuteReader(query);
+
+            }
+            else return null;
+
+        }
+
+        public DataTable clubOwner_viewacademy(ClubOwner_clubid c)
+        {
+            string query = "select A.name,A.monthlySubscription,(select count(P.username)" +
+                " from Player P where P.clubId=A.clubId) as noofplayers from Academy A where A.clubId=" + c.clubid + ";";
+            return dbMan.ExecuteReader(query);
+
+        }
+
+        public DataTable clubOwner_pitchno(ClubOwner_clubid c)
+        {
+            string query = "select pitch# as pitchno from Pitch where clubId=" + c.clubid;
+            return dbMan.ExecuteReader(query);
+
+        }
+
+        public DataTable clubOwner_academy(ClubOwner_academy c)
+        {
+            string query = "Update Academy set monthlySubscription =" + c.subscription + " where clubId ="+c.clubid;
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+
+                query = "select *from Academy where clubid="+c.clubid+ " and monthlySubscription="+c.subscription;
+                return dbMan.ExecuteReader(query);
+
+            }
+            else return null;
+
+        }
+
+        public DataTable clubOwner_addacademy(ClubOwner_addacademy c)
+        {
+            string query = "insert into Academy (name,monthlySubscription,clubId) values ('" + c.name + "',"+ c.subscription+","+c.clubid+")";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+
+                query = "select *from Academy where clubid=" + c.clubid + " and monthlySubscription=" + c.subscription;
+                return dbMan.ExecuteReader(query);
+
+            }
+            else return null;
+
+        }
+
+        public DataTable clubOwner_getid(ClubOwner_username u)
+        {
+            string query = "select id from Club where clubOwner='" + u.username + "';";
+            return dbMan.ExecuteReader(query);
+        }
+
         public DataTable GetEvents(DateTime date,string username)
         {
 
@@ -116,5 +217,51 @@ namespace Arena
         }
 
         //===========================================================================
+        public DataTable UpdatePlayer(Player p)
+        {
+            string query = "update Player set firstName = '" + p.fname + "' , lastName = '" + p.lname + "' , phone = '" + p.phone + "' , email = '" + p.email + "' , visa# = " + p.visa + " , password = '" + p.password + "' , birthDate = '" + p.bdate.ToString("yyyy-MM-dd") + "' where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND password='" + p.password + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+        }
+        public DataTable GetMyAcademy(string username)
+        {
+            string query = "select C.name as club_name,C.city,C.street,P.academyName,A.monthlySubscription from Player P, Club C, Academy A where userName = '" + username + "' and P.clubId=C.id and P.academyName=A.name and A.clubId = C.id";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable Unsubscribe (Player p)
+        {
+            string query = "update Player set academyName =NULL , clubId=NULL where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND password='" + p.password + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+
+        }
+        public DataTable GetPastEvents(string username)
+        {
+            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime < convert(date, getdate())";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable GetPastReservations(string username)
+        {
+            string query = "select * from Schedule where playerUserName = '" + username + "' and startTime < convert (date,getdate())";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable GetUpcomingEvents(string username)
+        {
+            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime > convert(date, getdate())";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable GetUpcomingReservations(string username)
+        {
+            string query = "select * from Schedule where playerUserName = '" + username + "' and startTime > convert (date,getdate())";
+            return dbMan.ExecuteReader(query);
+        }
     }
 }
