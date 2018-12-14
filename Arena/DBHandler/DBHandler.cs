@@ -37,6 +37,36 @@ namespace Arena
             }
             return null;
         }
+        public DataTable availableSchedule(DateTime date, int cid, int pid)
+        {
+            //string query = "SELECT *  FROM EVENT  JOIN CLUB ON EVENT.clubId=CLUB.id "
+            //  + "WHERE EVENT.startTime='" + date.ToString("yyyy-MM-dd HH:00") + "' AND CLUB.clubOwner='" + username + "'";
+            string query = "select startTime from schedule where startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") + " 23:00' and clubid = '"+cid+"' and pitch# = '"+pid+"';";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable getCitiesBooking()
+        {
+            string query = "select distinct city from club";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable insertBookingDB(string user, int selclub, int selpitchno, string date, int paid,int unpaid)
+        {
+            string query = "INSERT INTO schedule VALUES ('" + date+"', '"+paid+"', '"+unpaid+ "', '"+selclub+ "', '"+selpitchno+ "','"+user+"');";
+            if (dbMan.ExecuteNonQuery(query) == 1)
+                return dbMan.ExecuteReader("SELECT * FROM SCHEDULE WHERE startTime = '" + date + "' AND clubId = '" + selclub + "' AND pitch# = '" + selpitchno + "';");
+            else return null;
+  
+        }
+        public DataTable getPitchesDB(int id)
+        {
+            string query = "select pitch#,price from pitch where clubId = '"+id+"';";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable getClubsDB(string city)
+        {
+            string query = "select name,id from club where city = '"+city+"';" ;
+            return dbMan.ExecuteReader(query);
+        }
 
         public DataTable clubOwner_signup(ClubOwner_signup c)
         {
