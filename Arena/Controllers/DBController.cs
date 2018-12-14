@@ -49,7 +49,47 @@ string is the defult value
             return "value";
         }
 
-
+        [Route("api/DB/Book/{date:datetime}/{cid:int}/{pid:int}")]
+        [HttpGet]
+        public DataTable GetBooked( DateTime date,int cid,int pid)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.availableSchedule(date,cid,pid);
+            return result;      
+        }
+        [Route("api/DB/Book/getCity")]
+        [HttpGet]
+        public DataTable getCity()
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.getCitiesBooking();
+            return result;
+        }
+        //"api/DB/Book/insertBooking/b/3/1/2018-12-12/12:00/100/100/"
+        [Route("api/DB/Book/insertBooking/{user}/{selclub:int}/{selpitchno:int}/{date}/{date2}/{paid:int}/{unpaid:int}")]
+        [HttpGet]
+        public DataTable insertBooking(string user,int  selclub,int selpitchno,string date,string date2, int paid,int unpaid)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.insertBookingDB(user, selclub, selpitchno, date + " " + date2 + ":00", paid, unpaid);
+            return result;
+        }
+        [Route("api/DB/Book/getClubs/{city}")]
+        [HttpGet]
+        public DataTable getClubs(string city)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.getClubsDB(city);
+            return result;
+        }
+        [Route("api/DB/Book/getPitches/{id:int}")]
+        [HttpGet]
+        public DataTable getPitches(int id)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.getPitchesDB(id);
+            return result;
+        }
         [Route("api/DB/GetEvents/{username}/{date:datetime}")]
         [HttpGet]
         public DataTable GetEvents(string username,DateTime date)
