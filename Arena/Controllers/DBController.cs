@@ -86,6 +86,42 @@ string is the defult value
             return result;
         }
 
+        [Route("api/DB/GetPastEvents/{username}")]
+        [HttpGet]
+        public DataTable GetPastEvents(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetPastEvents(username);
+            return result;
+        }
+
+        [Route("api/DB/GetPastReservations/{username}")]
+        [HttpGet]
+        public DataTable GetPastReservations(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetPastReservations(username);
+            return result;
+        }
+
+        [Route("api/DB/GetUpcomingEvents/{username}")]
+        [HttpGet]
+        public DataTable GetUpcomingEvents(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetUpcomingEvents(username);
+            return result;
+        }
+
+        [Route("api/DB/GetUpcomingReservations/{username}")]
+        [HttpGet]
+        public DataTable GetUpcomingReservations(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetUpcomingReservations(username);
+            return result;
+        }
+
         //--------------------------------------------------------------------------
         //---------------------------------------POST FUNCTIONS--------------------
         // POST: api/DB
@@ -198,7 +234,7 @@ string is the defult value
         // PUT: api/DB/5
         [Route("api/DB/UpdatePlayer")]
         [HttpPost]
-        public DataTable Put([FromBody]Player p)
+        public DataTable UpdatePlayer([FromBody]Player p)
         {
             System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
             DataTable result = handler.UpdatePlayer(p);
