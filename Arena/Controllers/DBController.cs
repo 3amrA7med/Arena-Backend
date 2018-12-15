@@ -74,6 +74,14 @@ string is the defult value
             DataTable result = handler.getClubsDB(city);
             return result;
         }
+        [Route("api/DB/Book/getAcadAllClubs")]
+        [HttpGet]
+        public DataTable getAcadAllClubs()
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.getAcadAllClubsDB();
+            return result;
+        }
         [Route("api/DB/Book/getPitches/{id:int}")]
         [HttpGet]
         public DataTable getPitches(int id)
@@ -115,7 +123,7 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
             DataTable result = handler.GetMyAcademy(username);
-            return result;
+            return result;  
         }
 
         [Route("api/DB/GetPastEvents/{username}")]
@@ -153,6 +161,8 @@ string is the defult value
             DataTable result = handler.GetUpcomingReservations(username);
             return result;
         }
+       
+
 
         //--------------------------------------------------------------------------
         //---------------------------------------POST FUNCTIONS--------------------
@@ -269,6 +279,7 @@ string is the defult value
             DataTable result = handler.insertBookingDB(p);
             return result;
         }
+
         //--------------------------------------------------------------------------
         //---------------------------------------PUT FUNCTIONS----------------------
         // PUT: api/DB/5
@@ -287,6 +298,14 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
             DataTable result = handler.Unsubscribe(p);
+            return result;
+        }
+        [Route("api/DB/SubscribeAcademy")]
+        [HttpPost]
+        public DataTable Subscribe([FromBody]Player_Subscription p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
+            DataTable result = handler.SubscribeDB(p);
             return result;
         }
         //--------------------------------------------------------------------------
