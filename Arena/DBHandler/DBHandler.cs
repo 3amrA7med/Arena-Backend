@@ -67,6 +67,11 @@ namespace Arena
             string query = "select name,id from club where city = '"+city+"';" ;
             return dbMan.ExecuteReader(query);
         }
+        public DataTable getAcadAllClubsDB()
+        {
+            string query = "select a.clubID as cid,c.name as cname,a.name as aname, monthlySubscription as price from academy as a, club as c where a.clubid = c.id;";
+            return dbMan.ExecuteReader(query);
+        }
 
         public DataTable clubOwner_signup(ClubOwner_signup c)
         {
@@ -243,6 +248,17 @@ namespace Arena
             return null;
 
         }
+        public DataTable SubscribeDB(Player_Subscription p)
+        {
+            string query = "update Player set academyName ='"+p.aname+"' , clubId='"+p.cid+"' where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND academyName='" + p.aname + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+
+        }
         public DataTable GetPastEvents(string username)
         {
             string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime < convert(date, getdate())";
@@ -263,5 +279,6 @@ namespace Arena
             string query = "select * from Schedule where playerUserName = '" + username + "' and startTime > convert (date,getdate())";
             return dbMan.ExecuteReader(query);
         }
+    
     }
 }
