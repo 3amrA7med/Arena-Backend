@@ -95,6 +95,41 @@ namespace Arena
 
         }
 
+        public int DeleteEvent(int id,string username)
+        {
+            string query = "select Club.id from Club where Club.clubOwner ='"+username+"'";
+            Object oid = dbMan.ExecuteScalar(query);
+            int clubid = (int)oid;
+             query = "DELETE FROM EVENT "
+                + "WHERE EVENT.clubId='" + clubid + "' And EVENT.eventId=" + id + ";";
+           return dbMan.ExecuteNonQuery(query);
+        }
+
+        public int DeleteReservation(DateTime date,int num, string username, string time)
+        {
+            string query = "select Club.id from Club where Club.clubOwner ='" + username + "'";
+            Object oid = dbMan.ExecuteScalar(query);
+            int clubid = (int)oid;
+            query = "DELETE FROM SCHEDULE "
+                + "WHERE SCHEDULE.clubId='" + clubid + "' And SCHEDULE.startTime='" + date.ToString("yyyy - MM - dd") + " "+time+ ":00' AND "
+                + " SCHEDULE.pitch#='" + num + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+
+        public int DeleteMaint(DateTime date, int num, string username, string time,string minutes)
+        {
+            string query = "select Club.id from Club where Club.clubOwner ='" + username + "'";
+            Object oid = dbMan.ExecuteScalar(query);
+            int clubid = (int)oid;
+            query = "DELETE FROM Maintanance "
+                + "WHERE  Maintanance.clubId='" + clubid + "' And Maintanance.startTime='" + date.ToString("yyyy - MM - dd") +" "+time+":"+minutes+
+                "' AND "
+                + " Maintanance.pitch#='" + num + "';";
+           return dbMan.ExecuteNonQuery(query);
+        }
+
+
+
         public DataTable clubOwner_maintanance(ClubOwner_maintanance c)
         {
             string query = "INSERT INTO Maintanance (clubid,pitch#,startTime,endTime,cost,description) " +
@@ -200,7 +235,8 @@ namespace Arena
         {
 
             string query = "SELECT *  FROM EVENT  JOIN CLUB ON EVENT.clubId=CLUB.id "
-                +"WHERE EVENT.startTime='"+ date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='"+username+"'";
+                + "WHERE EVENT.startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") + " 23:59'"
+                + " AND CLUB.clubOwner='"+username+"'";
             return dbMan.ExecuteReader(query);
         }
 
@@ -209,7 +245,8 @@ namespace Arena
         {
 
             string query = "SELECT *  FROM Schedule  JOIN CLUB ON Schedule.clubId=CLUB.id "
-                + "WHERE Schedule.startTime='" + date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='" + username + "'";
+                + "WHERE Schedule.startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") + " 23:59'" 
+                + " AND CLUB.clubOwner='" + username + "'";
             return dbMan.ExecuteReader(query);
         }
 
@@ -217,7 +254,8 @@ namespace Arena
         {
 
             string query = "SELECT *  FROM Maintanance  JOIN CLUB ON Maintanance.clubId=CLUB.id "
-                + "WHERE Maintanance.startTime='" + date.ToString("yyyy-MM-dd") + "' AND CLUB.clubOwner='" + username + "'";
+                + "WHERE Maintanance.startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") + " 23:59'"
+                + " AND CLUB.clubOwner='" + username + "'";
             return dbMan.ExecuteReader(query);
         }
 
