@@ -290,14 +290,6 @@ string is the defult value
 
 
 
-        [Route("api/DB/PostOwnerClubId")]
-        [HttpPost]
-        public DataTable PostOwnerClubId ([FromBody]ClubOwner_username u)
-        {
-            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
-            DataTable result = handler.clubOwner_getid(u);
-            return result;
-        }
         [Route("api/DB/Book/insertBooking")]
         [HttpPost]
         public DataTable insertBooking([FromBody]PlayerBooking p)
