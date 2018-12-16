@@ -182,17 +182,17 @@ namespace Arena
 
         }
 
-        public DataTable clubOwner_viewacademy(ClubOwner_clubid c)
+        public DataTable clubOwner_viewacademy(int clubid)
         {
             string query = "select A.name,A.monthlySubscription,(select count(P.username)" +
-                " from Player P where P.clubId=A.clubId) as noofplayers from Academy A where A.clubId=" + c.clubid + ";";
+                " from Player P where P.clubId=A.clubId) as noofplayers from Academy A where A.clubId=" + clubid + ";";
             return dbMan.ExecuteReader(query);
 
         }
 
-        public DataTable clubOwner_pitchno(ClubOwner_clubid c)
+        public DataTable clubOwner_pitchno(int clubid)
         {
-            string query = "select pitch# as pitchno from Pitch where clubId=" + c.clubid;
+            string query = "select pitch# as pitchno from Pitch where clubId=" + clubid;
             return dbMan.ExecuteReader(query);
 
         }
@@ -225,9 +225,9 @@ namespace Arena
 
         }
 
-        public DataTable clubOwner_getid(ClubOwner_username u)
+        public DataTable clubOwner_getid(string username)
         {
-            string query = "select id from Club where clubOwner='" + u.username + "';";
+            string query = "select id from Club where clubOwner='" + username + "';";
             return dbMan.ExecuteReader(query);
         }
 

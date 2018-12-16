@@ -135,6 +135,34 @@ string is the defult value
             return result;
         }
 
+        [Route("api/DB/GetOwnerClubId/{username}")]
+        [HttpGet]
+        public DataTable GetOwnerClubId(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
+            DataTable result = handler.clubOwner_getid(username);
+            return result;
+        }
+
+        [Route("api/DB/GetOwnerPitchNumber/{clubid}")]
+        [HttpGet]
+        public DataTable GetOwnerPitchNumber(int clubid)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_pitchno(clubid);
+            return result;
+        }
+
+        [Route("api/DB/GetOwnerViewAcadamy/{clubid}")]
+        [HttpGet]
+        public DataTable GetOwnerViewAcadamy(int clubid)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_viewacademy(clubid);
+            return result;
+        }
         [Route("api/DB/GetPastReservations/{username}")]
         [HttpGet]
         public DataTable GetPastReservations(string username)
@@ -248,15 +276,7 @@ string is the defult value
             return result;
         }
 
-        [Route("api/DB/PostOwnerViewAcadamy")]
-        [HttpPost]
-        public DataTable PostOwnerViewAcadamy([FromBody]ClubOwner_clubid c)
-        {
 
-            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
-            DataTable result = handler.clubOwner_viewacademy(c);
-            return result;
-        }
 
         [Route("api/DB/PostOwnerAddAcadamy")]
         [HttpPost]
@@ -268,24 +288,8 @@ string is the defult value
             return result;
         }
 
-        [Route("api/DB/PostOwnerPitchNumber")]
-        [HttpPost]
-        public DataTable PostOwnerPitchNumber([FromBody]ClubOwner_clubid c)
-        {
 
-            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
-            DataTable result = handler.clubOwner_pitchno(c);
-            return result;
-        }
 
-        [Route("api/DB/PostOwnerClubId")]
-        [HttpPost]
-        public DataTable PostOwnerClubId ([FromBody]ClubOwner_username u)
-        {
-            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
-            DataTable result = handler.clubOwner_getid(u);
-            return result;
-        }
         [Route("api/DB/Book/insertBooking")]
         [HttpPost]
         public DataTable insertBooking([FromBody]PlayerBooking p)
@@ -294,6 +298,7 @@ string is the defult value
             DataTable result = handler.insertBookingDB(p);
             return result;
         }
+
 
         //--------------------------------------------------------------------------
         //---------------------------------------PUT FUNCTIONS----------------------
