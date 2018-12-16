@@ -199,6 +199,9 @@
     <Compile Include="Models\ClubOwner_signup.cs" />
     <Compile Include="Models\ClubOwner_username.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\PlayerBooking.cs" />
+    <Compile Include="Models\Player_Enrollment.cs" />
+    <Compile Include="Models\Player_Subscription.cs" />
     <Compile Include="Models\Signin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -333,11 +336,11 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
-	<Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
-		<ItemGroup>
-			<RoslynFiles Include="$(CscToolPath)\*" />
-		</ItemGroup>
-		<MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
-		<Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-	</Target>
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+  </Target>
 </Project>
