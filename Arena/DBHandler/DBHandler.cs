@@ -302,6 +302,35 @@ namespace Arena
             string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime < convert(date, getdate())";
             return dbMan.ExecuteReader(query);
         }
+        public DataTable GetAvailableEvents(string username,string city)
+        {
+            string query = "select c.name as cname,e.name as ename,eventId as eid, e.clubId as cid,availablePlaces as ap,convert(char,startTime) as st,priceperteam as ppt, prize as pz, noofteams as noot, noofteammembers as nootm, convert(char,endtime) as et from event as e, club as c,Player as u where c.city = '" + city + "' and c.id = e.clubId and  '" + username + "' not in (select username from participate as p where p.clubid = c.id and p.eventId = e.eventId) and availablePlaces >0 and e.startTime > convert(date, getdate());";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable enrollEvent(Player_Enrollment p)
+        {
+            int cid = p.cid;
+            int eid = p.eid;
+            string username = p.username;
+            string query = "select availableplaces from event where eventId = '" + eid + "'and clubId = '" + cid + "'";
+            int available = (int)dbMan.ExecuteScalar(query);
+            if (available > 0)
+            {
+                query = "insert into Participate values('" + username + "', '" + eid + "', '" + cid + "')";
+                if (dbMan.ExecuteNonQuery(query) == 1)
+                {
+                    available--;
+                    query = "update event set availableplaces = '"+available+"' where clubId = '"+cid+"' and eventId = '"+eid+"';";
+                    dbMan.ExecuteNonQuery(query);
+                    query = "select * from Participate where clubId = '" + cid + "' and eventId = '" + eid + "' and playerUserName = '" + username + "';";
+                    return dbMan.ExecuteReader(query);
+                }
+                else return null;
+                
+            }
+                
+            else return null;
+        }
         public DataTable GetPastReservations(string username)
         {
             string query = "select * from Schedule where playerUserName = '" + username + "' and startTime < convert (date,getdate())";

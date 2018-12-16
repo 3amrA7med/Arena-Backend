@@ -162,6 +162,14 @@ string is the defult value
             return result;
         }
        
+        [Route("api/DB/GetAvailableEvents/{username}/{city}")]
+        [HttpGet]
+        public DataTable GetAvailableEvents(string username,string city)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetAvailableEvents(username, city);
+            return result;
+        }
 
 
         //--------------------------------------------------------------------------
@@ -183,7 +191,14 @@ string is the defult value
             DataTable result = handler.player_signup(p);
             return result;
         }
-
+        [Route("api/DB/Enroll")]
+        [HttpPost]
+        public DataTable Enroll([FromBody]Player_Enrollment p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside Player_Post********************************** ");
+            DataTable result = handler.enrollEvent(p);
+            return result;
+        }
         [Route("api/DB/PostOwner")]
         [HttpPost]
         public DataTable PostOwner([FromBody]ClubOwner_signup c)
