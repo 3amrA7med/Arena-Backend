@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Arena.Models;
 using System.Data;
-
 namespace Arena.Controllers
 {
     public class DBController : ApiController
@@ -75,6 +74,14 @@ string is the defult value
             DataTable result = handler.getClubsDB(city);
             return result;
         }
+        [Route("api/DB/Book/getAcadAllClubs")]
+        [HttpGet]
+        public DataTable getAcadAllClubs()
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.getAcadAllClubsDB();
+            return result;
+        }
         [Route("api/DB/Book/getPitches/{id:int}")]
         [HttpGet]
         public DataTable getPitches(int id)
@@ -116,7 +123,7 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
             DataTable result = handler.GetMyAcademy(username);
-            return result;
+            return result;  
         }
 
         [Route("api/DB/GetPastEvents/{username}")]
@@ -128,6 +135,34 @@ string is the defult value
             return result;
         }
 
+        [Route("api/DB/GetOwnerClubId/{username}")]
+        [HttpGet]
+        public DataTable GetOwnerClubId(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
+            DataTable result = handler.clubOwner_getid(username);
+            return result;
+        }
+
+        [Route("api/DB/GetOwnerPitchNumber/{clubid}")]
+        [HttpGet]
+        public DataTable GetOwnerPitchNumber(int clubid)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_pitchno(clubid);
+            return result;
+        }
+
+        [Route("api/DB/GetOwnerViewAcadamy/{clubid}")]
+        [HttpGet]
+        public DataTable GetOwnerViewAcadamy(int clubid)
+        {
+
+            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
+            DataTable result = handler.clubOwner_viewacademy(clubid);
+            return result;
+        }
         [Route("api/DB/GetPastReservations/{username}")]
         [HttpGet]
         public DataTable GetPastReservations(string username)
@@ -154,6 +189,16 @@ string is the defult value
             DataTable result = handler.GetUpcomingReservations(username);
             return result;
         }
+       
+        [Route("api/DB/GetAvailableEvents/{username}/{city}")]
+        [HttpGet]
+        public DataTable GetAvailableEvents(string username,string city)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetAvailableEvents(username, city);
+            return result;
+        }
+
 
         [Route("api/DB/Rev/getClubs/{username}")]
         [HttpGet]
@@ -203,7 +248,14 @@ string is the defult value
             DataTable result = handler.player_signup(p);
             return result;
         }
-
+        [Route("api/DB/Enroll")]
+        [HttpPost]
+        public DataTable Enroll([FromBody]Player_Enrollment p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside Player_Post********************************** ");
+            DataTable result = handler.enrollEvent(p);
+            return result;
+        }
         [Route("api/DB/PostOwner")]
         [HttpPost]
         public DataTable PostOwner([FromBody]ClubOwner_signup c)
@@ -253,15 +305,7 @@ string is the defult value
             return result;
         }
 
-        [Route("api/DB/PostOwnerViewAcadamy")]
-        [HttpPost]
-        public DataTable PostOwnerViewAcadamy([FromBody]ClubOwner_clubid c)
-        {
 
-            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
-            DataTable result = handler.clubOwner_viewacademy(c);
-            return result;
-        }
 
         [Route("api/DB/PostOwnerAddAcadamy")]
         [HttpPost]
@@ -273,24 +317,8 @@ string is the defult value
             return result;
         }
 
-        [Route("api/DB/PostOwnerPitchNumber")]
-        [HttpPost]
-        public DataTable PostOwnerPitchNumber([FromBody]ClubOwner_clubid c)
-        {
 
-            System.Diagnostics.Debug.WriteLine("Inside event_Post********************************** ");
-            DataTable result = handler.clubOwner_pitchno(c);
-            return result;
-        }
 
-        [Route("api/DB/PostOwnerClubId")]
-        [HttpPost]
-        public DataTable PostOwnerClubId ([FromBody]ClubOwner_username u)
-        {
-            System.Diagnostics.Debug.WriteLine("Inside getid_Post********************************** ");
-            DataTable result = handler.clubOwner_getid(u);
-            return result;
-        }
         [Route("api/DB/Book/insertBooking")]
         [HttpPost]
         public DataTable insertBooking([FromBody]PlayerBooking p)
@@ -299,6 +327,8 @@ string is the defult value
             DataTable result = handler.insertBookingDB(p);
             return result;
         }
+
+
 
         [Route("api/DB/Rev/addRev")]
         [HttpPost]
@@ -337,6 +367,14 @@ string is the defult value
             DataTable result = handler.Unsubscribe(p);
             return result;
         }
+        [Route("api/DB/SubscribeAcademy")]
+        [HttpPost]
+        public DataTable Subscribe([FromBody]Player_Subscription p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
+            DataTable result = handler.SubscribeDB(p);
+            return result;
+        }
         //--------------------------------------------------------------------------
         //---------------------------------------DELETE FUNCTIONS-------------------
         // DELETE: api/DB/5
@@ -344,6 +382,26 @@ string is the defult value
         {
         }
 
+        [Route("api/DB/DeleteEvent/{id:int}/{username}")]
+        [HttpDelete]
+        public int DeleteEvent(int id, string username)
+        {
+            return handler.DeleteEvent(id, username);
+        }
+
+        [Route("api/DB/DeleteReservation/{num:int}/{username}/{date:datetime}/{time}")]
+        [HttpDelete]
+        public int DeleteReservation(int num, string username, DateTime date, String time)
+        {
+           return handler.DeleteReservation(date,num, username, time);
+        }
+
+        [Route("api/DB/DeleteMaint/{num:int}/{username}/{date:datetime}/{time}/{minutes}")]
+        [HttpDelete]
+        public int DeleteMaint(int num, string username, DateTime date, String time,String minutes)
+        {
+           return handler.DeleteMaint(date, num, username, time,minutes);
+        }
 
     }
 }
