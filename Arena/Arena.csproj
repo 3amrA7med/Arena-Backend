@@ -202,6 +202,7 @@
     <Compile Include="Models\PlayerBooking.cs" />
     <Compile Include="Models\Player_Enrollment.cs" />
     <Compile Include="Models\Player_Subscription.cs" />
+    <Compile Include="Models\Reviews.cs" />
     <Compile Include="Models\Signin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

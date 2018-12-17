@@ -347,5 +347,36 @@ namespace Arena
             return dbMan.ExecuteReader(query);
         }
     
+        public DataTable GetRevClubs(string username)
+        {
+
+            string query = "SELECT distinct S.clubId, C.name from Schedule S, Club C where S.playerUserName = '" + username + "' and S.clubId = C.id except (select R.clubId, C.name from Review R, Club C where R.playerId = '" + username + "' and R.clubId = C.id )";
+
+            return dbMan.ExecuteReader(query);
+        }
+        public int GetSum(int id)
+        {
+            string query = "select sum(rating) from Review where clubId = " + id + "";
+            if (dbMan.ExecuteScalar(query) == System.DBNull.Value)
+                return 0;
+            else
+                return Convert.ToInt16(dbMan.ExecuteScalar(query));
+        }
+        public int addRev(Reviews r)
+        {
+            string query = "insert into Review (playerId,clubId,rating) values ('" + r.username + "' , " + r.id + "," + r.rate + " )";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public DataTable GetCount(int id)
+        {
+            string query = "select reviewCount from Club where id = " + id + " ";
+            return dbMan.ExecuteReader(query);
+        }
+        public int updateRev(Reviews r)
+        {
+            string query = "update Club set rating = " + r.rating + " ,  reviewCount = " + r.count + " where id = " + r.id + " ";
+            return dbMan.ExecuteNonQuery(query);
+        }
+
     }
 }
