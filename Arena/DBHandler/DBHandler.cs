@@ -59,7 +59,12 @@ namespace Arena
         }
         public DataTable getPitchesDB(int id)
         {
-            string query = "select pitch#,price from pitch where clubId = '"+id+"';";
+            string query = "select pitch#,price,CASE WHEN TYPE =0 THEN 'Indoor' when type =1 then 'Natural turf' when type=2 then 'Artifical turf' else 'Undefined' END AS type from pitch where clubId = '" + id+"';";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable getHourStats(int cid)
+        {
+            string query = "select count(*) as num, substring(convert(char,starttime),13,17) as hour from schedule  where clubid = '" + cid + "' group by (substring(convert(char,starttime),13,17)) order by(num)desc";
             return dbMan.ExecuteReader(query);
         }
         public DataTable getClubsDB(string city)
