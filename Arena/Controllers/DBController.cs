@@ -207,6 +207,14 @@ string is the defult value
             DataTable result = handler.getHourStats(cid);
             return result;
         }
+        [Route("api/DB/getPitchStats/{cid}")]
+        [HttpGet]
+        public DataTable GetPitchStats(int cid)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.getPitchStats(cid);
+            return result;
+        }
 
         [Route("api/DB/Rev/getClubs/{username}")]
         [HttpGet]

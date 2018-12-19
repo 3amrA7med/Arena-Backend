@@ -67,6 +67,11 @@ namespace Arena
             string query = "select count(*) as num, substring(convert(char,starttime),13,17) as hour from schedule  where clubid = '" + cid + "' group by (substring(convert(char,starttime),13,17)) order by(num)desc";
             return dbMan.ExecuteReader(query);
         }
+        public DataTable getPitchStats(int cid)
+        {
+            string query = "select count(*) as num, pitch# as pitchno from schedule  where clubid = '" + cid + "' group by pitch# order by(num)desc";
+            return dbMan.ExecuteReader(query);
+        }
         public DataTable getClubsDB(string city)
         {
             string query = "select name,id from club where city = '"+city+"';" ;
