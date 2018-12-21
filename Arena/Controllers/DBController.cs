@@ -48,6 +48,34 @@ string is the defult value
             return "value";
         }
 
+        [Route("api/DB/GetMaxCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetMaxCost(int id)
+        {
+            return handler.GetMaxCost(id);
+        }
+
+
+        [Route("api/DB/GetMinCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetMinCost(int id)
+        {
+            return handler.GetMinCost(id);
+        }
+        [Route("api/DB/GetAvgCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetAvgCost(int id)
+        {
+            return handler.GetAvgCost(id);
+        }
+
+        [Route("api/DB/GetProfit/{id:int}")]
+        [HttpGet]
+        public DataTable GetProfit(int id)
+        {
+            return handler.GetProfit(id);
+        }
+
         [Route("api/DB/Book/{date:datetime}/{cid:int}/{pid:int}")]
         [HttpGet]
         public DataTable GetBooked( DateTime date,int cid,int pid)
@@ -88,6 +116,15 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
             DataTable result = handler.getPitchesDB(id);
+            return result;
+        }
+
+        [Route("api/DB/GetClub/{username}")]
+        [HttpGet]
+        public DataTable GetClub(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.GetClub(username);
             return result;
         }
         [Route("api/DB/GetEvents/{username}/{date:datetime}")]
