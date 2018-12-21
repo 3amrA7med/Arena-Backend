@@ -423,10 +423,12 @@ namespace Arena
 
         public void profitexist(string date,int id)
         {
-            string query= "select * from Profit where profitDate='"+date + "' and clubId="+id;
-            if(dbMan.ExecuteReader(query)==null)
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query= "select * from Profit where profitDate='"+curr+ "' and clubId="+id;
+           
+            if (dbMan.ExecuteReader(query)==null)
             {
-                query = "insert into profit values('" + id + "', '" + date + "',0 ,0 )";
+                query = "insert into profit values('" + id + "', '" + curr + "',0 ,0 )";
                 dbMan.ExecuteNonQuery(query);
             }
         }
