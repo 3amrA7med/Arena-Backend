@@ -48,6 +48,34 @@ string is the defult value
             return "value";
         }
 
+        [Route("api/DB/GetMaxCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetMaxCost(int id)
+        {
+            return handler.GetMaxCost(id);
+        }
+
+
+        [Route("api/DB/GetMinCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetMinCost(int id)
+        {
+            return handler.GetMinCost(id);
+        }
+        [Route("api/DB/GetAvgCost/{id:int}")]
+        [HttpGet]
+        public DataTable GetAvgCost(int id)
+        {
+            return handler.GetAvgCost(id);
+        }
+
+        [Route("api/DB/GetProfit/{id:int}")]
+        [HttpGet]
+        public DataTable GetProfit(int id)
+        {
+            return handler.GetProfit(id);
+        }
+
         [Route("api/DB/Book/{date:datetime}/{cid:int}/{pid:int}")]
         [HttpGet]
         public DataTable GetBooked( DateTime date,int cid,int pid)
@@ -88,6 +116,15 @@ string is the defult value
         {
             System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
             DataTable result = handler.getPitchesDB(id);
+            return result;
+        }
+
+        [Route("api/DB/GetClub/{username}")]
+        [HttpGet]
+        public DataTable GetClub(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            DataTable result = handler.GetClub(username);
             return result;
         }
         [Route("api/DB/GetEvents/{username}/{date:datetime}")]
@@ -199,6 +236,51 @@ string is the defult value
             return result;
         }
 
+        [Route("api/DB/getHourStats/{cid}")]
+        [HttpGet]
+        public DataTable GetHourStats(int cid)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.getHourStats(cid);
+            return result;
+        }
+        [Route("api/DB/getPitchStats/{cid}")]
+        [HttpGet]
+        public DataTable GetPitchStats(int cid)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.getPitchStats(cid);
+            return result;
+        }
+
+        [Route("api/DB/Rev/getClubs/{username}")]
+        [HttpGet]
+        public DataTable GetRevClubs(string username)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetRevClubs(username);
+            return result;
+        }
+
+        [Route("api/DB/Rev/getSum/{id}")]
+        [HttpGet]
+        public int GetSum(int id)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            int result = handler.GetSum(id);
+            return result;
+        }
+
+        [Route("api/DB/Rev/getCount/{id}")]
+        [HttpGet]
+        public DataTable GetCount(int id)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside GET********************************** ");
+            DataTable result = handler.GetCount(id);
+            return result;
+        }
+
+
 
         //--------------------------------------------------------------------------
         //---------------------------------------POST FUNCTIONS--------------------
@@ -300,6 +382,24 @@ string is the defult value
         }
 
 
+
+        [Route("api/DB/Rev/addRev")]
+        [HttpPost]
+        public void addRev([FromBody]Reviews r)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            int result = handler.addRev(r);
+            return ;
+        }
+
+        [Route("api/DB/Rev/updateRev")]
+        [HttpPost]
+        public void updateRev([FromBody]Reviews r)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside bool********************************** ");
+            int result = handler.updateRev(r);
+            return;
+        }
         //--------------------------------------------------------------------------
         //---------------------------------------PUT FUNCTIONS----------------------
         // PUT: api/DB/5

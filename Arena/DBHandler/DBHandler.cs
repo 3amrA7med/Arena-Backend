@@ -53,13 +53,28 @@ namespace Arena
         {
             string query = "INSERT INTO schedule VALUES ('" + p.date+" "+ p.date2 +":00', '"+p.paid+"', '"+p.unpaid+ "', '"+p.selclub+ "', '"+p.selpitchno+ "','"+p.user+"');";
             if (dbMan.ExecuteNonQuery(query) == 1)
+            {
+                profitexist(p.date, p.selclub);
+                Addincome(p.date, p.selclub, p.paid);
                 return dbMan.ExecuteReader("SELECT * FROM SCHEDULE WHERE startTime = '" + p.date + " " + p.date2 + ":00' AND clubId = '" + p.selclub + "' AND pitch# = '" + p.selpitchno + "';");
+            }
+
             else return null;
   
         }
         public DataTable getPitchesDB(int id)
         {
-            string query = "select pitch#,price from pitch where clubId = '"+id+"';";
+            string query = "select pitch#,price,CASE WHEN TYPE =0 THEN 'Indoor' when type =1 then 'Natural turf' when type=2 then 'Artifical turf' else 'Undefined' END AS type from pitch where clubId = '" + id+"';";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable getHourStats(int cid)
+        {
+            string query = "select count(*) as num, substring(convert(char,starttime),13,17) as hour from schedule  where clubid = '" + cid + "' group by (substring(convert(char,starttime),13,17)) order by(num)desc";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable getPitchStats(int cid)
+        {
+            string query = "select count(*) as num, pitch# as pitchno from schedule  where clubid = '" + cid + "' group by pitch# order by(num)desc";
             return dbMan.ExecuteReader(query);
         }
         public DataTable getClubsDB(string city)
@@ -132,6 +147,8 @@ namespace Arena
 
         public DataTable clubOwner_maintanance(ClubOwner_maintanance c)
         {
+
+
             string query = "INSERT INTO Maintanance (clubid,pitch#,startTime,endTime,cost,description) " +
                 " VALUES (" + c.clubid + "," + c.pitch_no + ",'" + c.maintanance_start_date.ToString("yyyy-MM-dd hh:mm:00.000")
                 + "','" + c.maintanance_end_date.ToString("yyyy-MM-dd hh:mm:00.000") + "'," + c.cost + ",'" + c.description + "')";
@@ -139,8 +156,10 @@ namespace Arena
             {
                
                     query = "SELECT * FROM Maintanance WHERE clubId=" + c.clubid + " AND Pitch#=" + c.pitch_no + ";";
-                    return dbMan.ExecuteReader(query);
-              
+                profitexist(c.maintanance_start_date.ToString("yyyy-MM-dd "), c.clubid);
+                Addoutcome(c.maintanance_start_date.ToString("yyyy-MM-dd "), c.clubid,(int)c.cost);
+                return dbMan.ExecuteReader(query);
+                    
             }
             else return null;
 
@@ -292,6 +311,7 @@ namespace Arena
             if (dbMan.ExecuteNonQuery(query) != 0)
             {
                 query = "SELECT *, 'player' AS type FROM Player WHERE userName='" + p.username + "' AND academyName='" + p.aname + "';";
+                AddAcademyIncome(p.cid);
                 return dbMan.ExecuteReader(query);
             }
             return null;
@@ -304,7 +324,7 @@ namespace Arena
         }
         public DataTable GetAvailableEvents(string username,string city)
         {
-            string query = "select c.name as cname,e.name as ename,eventId as eid, e.clubId as cid,availablePlaces as ap,convert(char,startTime) as st,priceperteam as ppt, prize as pz, noofteams as noot, noofteammembers as nootm, convert(char,endtime) as et from event as e, club as c,Player as u where c.city = '" + city + "' and c.id = e.clubId and  '" + username + "' not in (select username from participate as p where p.clubid = c.id and p.eventId = e.eventId) and availablePlaces >0 and e.startTime > convert(date, getdate());";
+            string query = "select c.name as cname,e.name as ename,eventId as eid, e.clubId as cid,availablePlaces as ap,convert(char,startTime) as st,priceperteam as ppt, prize as pz, noofteams as noot, noofteammembers as nootm, convert(char,endtime) as et from event as e, club as c,Player as u where c.city = '" + city + "' and c.id = e.clubId and u.userName = '" + username + "' and  '" + username + "' not in (select username from participate as p where p.clubid = c.id and p.eventId = e.eventId) and availablePlaces >0 and e.startTime > convert(date, getdate());";
             return dbMan.ExecuteReader(query);
         }
         public DataTable enrollEvent(Player_Enrollment p)
@@ -316,12 +336,14 @@ namespace Arena
             int available = (int)dbMan.ExecuteScalar(query);
             if (available > 0)
             {
+
                 query = "insert into Participate values('" + username + "', '" + eid + "', '" + cid + "')";
                 if (dbMan.ExecuteNonQuery(query) == 1)
                 {
                     available--;
                     query = "update event set availableplaces = '"+available+"' where clubId = '"+cid+"' and eventId = '"+eid+"';";
                     dbMan.ExecuteNonQuery(query);
+                    AddEventIncome(cid, eid);
                     query = "select * from Participate where clubId = '" + cid + "' and eventId = '" + eid + "' and playerUserName = '" + username + "';";
                     return dbMan.ExecuteReader(query);
                 }
@@ -338,7 +360,7 @@ namespace Arena
         }
         public DataTable GetUpcomingEvents(string username)
         {
-            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime > convert(date, getdate())";
+            string query = "select * from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime > convert(date, getdate())";
             return dbMan.ExecuteReader(query);
         }
         public DataTable GetUpcomingReservations(string username)
@@ -347,5 +369,136 @@ namespace Arena
             return dbMan.ExecuteReader(query);
         }
     
+        public DataTable GetRevClubs(string username)
+        {
+
+            string query = "SELECT distinct S.clubId, C.name from Schedule S, Club C where S.playerUserName = '" + username + "' and S.clubId = C.id except (select R.clubId, C.name from Review R, Club C where R.playerId = '" + username + "' and R.clubId = C.id )";
+
+            return dbMan.ExecuteReader(query);
+        }
+        public int GetSum(int id)
+        {
+            string query = "select sum(rating) from Review where clubId = " + id + "";
+            if (dbMan.ExecuteScalar(query) == System.DBNull.Value)
+                return 0;
+            else
+                return Convert.ToInt16(dbMan.ExecuteScalar(query));
+        }
+        public int addRev(Reviews r)
+        {
+            string query = "insert into Review (playerId,clubId,rating) values ('" + r.username + "' , " + r.id + "," + r.rate + " )";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public DataTable GetCount(int id)
+        {
+            string query = "select reviewCount from Club where id = " + id + " ";
+            return dbMan.ExecuteReader(query);
+        }
+        public int updateRev(Reviews r)
+        {
+            string query = "update Club set rating = " + r.rating + " ,  reviewCount = " + r.count + " where id = " + r.id + " ";
+            return dbMan.ExecuteNonQuery(query);
+        }
+
+        public DataTable GetMaxCost(int id)
+        {
+            string query = " select top 1 pitch# As pitchNum,max(cost)As Maxcost from Maintanance "
+                           + " where convert(date, startTime) = convert(date,GETDATE()) "
+                           + " and clubId = "+id
+                           + " group by pitch#   order by (Maxcost) desc ";
+            return dbMan.ExecuteReader(query);
+        }
+
+        public DataTable GetMinCost(int id)
+        {
+            string query = " select top 1 pitch# As pitchNum,min(cost)As Mincost from Maintanance "
+                           + " where convert(date, startTime) = convert(date,GETDATE()) "
+                           + " and clubId = " + id
+                           + " group by pitch#   order by (Mincost) ";
+            return dbMan.ExecuteReader(query);
+        }
+
+        public DataTable GetClub(string username)
+        {
+            string query = "Select * From Club where clubOwner='" + username + "'";
+            return dbMan.ExecuteReader(query);
+        }
+        public DataTable GetAvgCost(int id)
+        {
+            string query = " select avg(cost)As avgcost from Maintanance "
+                           + " where convert(date, startTime) = convert(date,GETDATE()) "
+                           + " and clubId = " + id;
+            return dbMan.ExecuteReader(query);
+        }
+
+        public void profitexist(string date,int id)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query= "select * from Profit where profitDate='"+curr+ "' and clubId="+id;
+           
+            if (dbMan.ExecuteReader(query)==null)
+            {
+                query = "insert into profit values('" + id + "', '" + curr + "',0 ,0 )";
+                dbMan.ExecuteNonQuery(query);
+            }
+        }
+        public void Addincome(string date, int id,int income)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query = "select income from profit where clubid="+id + " And profitDate='" + curr + "'";
+            Object inc = dbMan.ExecuteScalar(query);
+            int inci = Convert.ToInt32(inc);
+            income = inci + income;
+            inc = inci + income;
+            query = "update profit set income=" + income + " where clubId=" + id 
+                + " and profitDate='" + curr + "'";
+            dbMan.ExecuteNonQuery(query);
+        }
+
+        public void Addoutcome(string date, int id, int outcome)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query = "select outcome from profit where clubid=" + id +" And profitDate='"+curr+"'";
+            Object outc = dbMan.ExecuteScalar(query);
+            int outci = Convert.ToInt32(outc);
+            outcome = outci + outcome;
+            query = "update profit set outcome=" + outcome + " where clubId=" + id
+                + " and profitDate='" + curr + "'";
+            dbMan.ExecuteNonQuery(query);
+        }
+        public void AddEventIncome(int cid,int eid)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query = "select pricePerTeam from event where clubid=" + cid + " and eventid=" + eid;
+            Object price = dbMan.ExecuteScalar(query);
+            int priice = Convert.ToInt32(price);
+            profitexist(curr,cid);
+            Addincome(curr,cid,priice);
+        }
+
+        public DataTable GetProfit(int id)
+        {
+            string query = "select * from profit where profitDate = Convert(date, GETDATE()) And clubId = " + id;
+            return dbMan.ExecuteReader(query);
+        }
+        public void AddAcademyIncome(int cid)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query = "select monthlySubscription from Academy where clubId = "+cid;
+            Object subs = dbMan.ExecuteScalar(query);
+            int isubs = Convert.ToInt32(subs);
+            profitexist(curr, cid);
+            Addincome(curr, cid, isubs);
+        }
+
+        public void AddAcademyOutcome(int cid)
+        {
+            string curr = DateTime.Now.ToString("yyyy-MM-dd");
+            string query = "select monthlySubscription from Academy where clubId = " + cid;
+            Object subs = dbMan.ExecuteScalar(query);
+            int isubs = Convert.ToInt32(subs);
+            profitexist(curr, cid);
+            Addoutcome(curr, cid, isubs);
+        }
     }
 }
