@@ -412,6 +412,15 @@ string is the defult value
             return result;
         }
 
+        [Route("api/DB/UpdateOwner")]
+        [HttpPost]
+        public DataTable UpdateOwner([FromBody]ClubOwner_signup p)
+        {
+            System.Diagnostics.Debug.WriteLine("Inside update_player********************************** ");
+            DataTable result = handler.UpdateOwner(p);
+            return result;
+        }
+
         [Route("api/DB/UnsubscribeAcademy")]
         [HttpPost]
         public DataTable Unsubscribe([FromBody]Player p)

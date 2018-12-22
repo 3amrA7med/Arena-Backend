@@ -289,6 +289,18 @@ namespace Arena
             }
             return null;
         }
+
+        public DataTable UpdateOwner(ClubOwner_signup p)
+        {
+            string query = "update ClubOwner set firstName = '" + p.fname + "' , lastName = '" + p.lname + "' , phone = '" + p.phone + "' , email = '" + p.email + "' , password = '" + p.password + "' where userName = '" + p.username + "'";
+            if (dbMan.ExecuteNonQuery(query) != 0)
+            {
+                query = "SELECT *, 'owner' AS type FROM ClubOwner WHERE userName='" + p.username + "' AND password='" + p.password + "';";
+                return dbMan.ExecuteReader(query);
+            }
+            return null;
+        }
+
         public DataTable GetMyAcademy(string username)
         {
             string query = "select C.name as club_name,C.city,C.street,P.academyName,A.monthlySubscription from Player P, Club C, Academy A where userName = '" + username + "' and P.clubId=C.id and P.academyName=A.name and A.clubId = C.id";
@@ -355,17 +367,17 @@ namespace Arena
         }
         public DataTable GetPastReservations(string username)
         {
-            string query = "select * from Schedule where playerUserName = '" + username + "' and startTime < convert (date,getdate())";
+            string query = "select P.pitch# as pitchNumber,C.name,C.city,C.street,C.rating,C.reviewCount,S.startTime,S.paid,S.unpaid,P.price,P.capacity,P.type  from Schedule S,Pitch P,Club C where playerUserName = '" + username + "' and startTime < convert (date,getdate()) and S.clubId = P.clubId and S.pitch# = P.pitch# and P.clubId = C.id";
             return dbMan.ExecuteReader(query);
         }
         public DataTable GetUpcomingEvents(string username)
         {
-            string query = "select * from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime > convert(date, getdate())";
+            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime >= convert(date, getdate())";
             return dbMan.ExecuteReader(query);
         }
         public DataTable GetUpcomingReservations(string username)
         {
-            string query = "select * from Schedule where playerUserName = '" + username + "' and startTime > convert (date,getdate())";
+            string query = "select P.pitch# as pitchNumber,C.name,C.city,C.street,C.rating,C.reviewCount,S.startTime,S.paid,S.unpaid,P.price,P.capacity,P.type  from Schedule S,Pitch P,Club C where playerUserName = '" + username + "' and startTime >= convert (date,getdate()) and S.clubId = P.clubId and S.pitch# = P.pitch# and P.clubId = C.id";
             return dbMan.ExecuteReader(query);
         }
     

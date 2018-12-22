@@ -11,7 +11,7 @@ namespace Arena
     {
 
 
-        static string DB_Connection_String = @"Data Source=localhost;Initial Catalog=FADB;Integrated Security=True";
+        static string DB_Connection_String = @"Data Source=SHADY\SQLEXPRESS;Initial Catalog=Arena;Integrated Security=True";
 
         SqlConnection myConnection;
 
