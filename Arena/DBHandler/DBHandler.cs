@@ -331,7 +331,7 @@ namespace Arena
         }
         public DataTable GetPastEvents(string username)
         {
-            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime < convert(date, getdate())";
+            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime,E.noOfTeams,E.noOfTeamMembers,E.prize,E.pricePerTeam from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime < convert(date, getdate())";
             return dbMan.ExecuteReader(query);
         }
         public DataTable GetAvailableEvents(string username,string city)
@@ -372,7 +372,7 @@ namespace Arena
         }
         public DataTable GetUpcomingEvents(string username)
         {
-            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime >= convert(date, getdate())";
+            string query = "select C.name as clubName, C.street, C.city, E.name, E.startTime,E.noOfTeams,E.noOfTeamMembers,E.prize,E.pricePerTeam from Event E, Club C, Participate P where P.playerUserName = '" + username + "' and P.eventId = E.eventId and P.clubId = E.clubId and E.clubId = C.id and E.startTime >= convert(date, getdate())";
             return dbMan.ExecuteReader(query);
         }
         public DataTable GetUpcomingReservations(string username)
