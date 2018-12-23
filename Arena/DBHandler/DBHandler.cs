@@ -51,7 +51,7 @@ namespace Arena
         }
         public DataTable insertBookingDB(PlayerBooking p)
         {
-            string query = "INSERT INTO schedule VALUES ('" + p.date+" "+ p.date2 +":00', '"+p.paid+"', '"+p.unpaid+ "', '"+p.selclub+ "', '"+p.selpitchno+ "','"+p.user+"');";
+            string query = "INSERT INTO schedule VALUES ('" + p.date+" "+ p.date2 +":00', "+p.paid+", "+p.unpaid+ ", "+p.selclub+ ", "+p.selpitchno+ ",'"+p.user+"');";
             if (dbMan.ExecuteNonQuery(query) == 1)
             {
                 profitexist(p.date, p.selclub);
@@ -384,7 +384,7 @@ namespace Arena
         public DataTable GetRevClubs(string username)
         {
 
-            string query = "SELECT distinct S.clubId, C.name from Schedule S, Club C where S.playerUserName = '" + username + "' and S.clubId = C.id except (select R.clubId, C.name from Review R, Club C where R.playerId = '" + username + "' and R.clubId = C.id )";
+            string query = "SELECT distinct S.clubId, C.name from Schedule S, Club C where S.playerUserName = '" + username + "' and S.clubId = C.id and S.startTime < convert (date,getdate()) except (select R.clubId, C.name from Review R, Club C where R.playerId = '" + username + "' and R.clubId=C.id) ";
 
             return dbMan.ExecuteReader(query);
         }
