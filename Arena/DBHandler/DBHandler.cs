@@ -39,10 +39,20 @@ namespace Arena
         }
         public DataTable availableSchedule(DateTime date, int cid, int pid)
         {
-            //string query = "SELECT *  FROM EVENT  JOIN CLUB ON EVENT.clubId=CLUB.id "
-            //  + "WHERE EVENT.startTime='" + date.ToString("yyyy-MM-dd HH:00") + "' AND CLUB.clubOwner='" + username + "'";
-            string query = "select startTime from schedule where startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") + " 23:00' and clubid = '"+cid+"' and pitch# = '"+pid+"';";
-            return dbMan.ExecuteReader(query);
+            string query = "CREATE TABLE TEMPDAY(VHOURS DATETIME NULL);  "+
+            "INSERT INTO TEMPDAY(VHOURS) VALUES('" + date.ToString("yyyy-MM-dd")+"');  " +
+            "while ((select max(vhours) from TEMPDAY))< '" + date.ToString("yyyy-MM-dd") + " 23:00'  " +
+            "begin  "+
+            "insert into TEMPDAY(vhours) values(dateadd(hour, 1, (select max(vhours) from TEMPDAY)))  "+
+            "end;  "+
+            "(select vhours  AS startTime  from TEMPDAY, Maintanance where vhours between startTime and endtime and pitch# = '" + pid + "' and clubId = '" + cid + "')  " +
+            "union " +
+            "(select startTime from schedule where startTime between '" + date.ToString("yyyy-MM-dd") + "'and '" + date.ToString("yyyy-MM-dd") +
+            " 23:00' and clubid = '" + cid + "' and pitch# = '" + pid + "') " +
+            "union " +
+            "(select vhours  AS startTime from tempday where vhours < GETDATE()); " +
+            "DROP TABLE TEMPDAY; ";
+                return dbMan.ExecuteReader(query);
         }
         public DataTable getCitiesBooking()
         {
